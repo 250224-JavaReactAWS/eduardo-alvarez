@@ -10,5 +10,6 @@ public class CartItem {
         this.userID = userID;
         this.productID = productID;
         this.quantity=quantity;
+
     }
 }
