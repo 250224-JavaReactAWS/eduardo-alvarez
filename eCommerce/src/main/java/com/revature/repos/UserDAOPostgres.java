@@ -9,18 +9,9 @@ import java.util.List;
 
 public class UserDAOPostgres implements UserDAO{
 
-    private List<User> testUsers;
     public int usersCount;
 
     public UserDAOPostgres(){
-        User customer1 = new User(1,"Juan","Perez","enail","password");
-        User customer2 = new User(2,"Pepe","Gonzales","enail2","password");
-        User admin = new User(3,"Pancho","Hernandez","enail3","password123");
-        testUsers=new ArrayList<User>();
-        testUsers.add(customer1);
-        testUsers.add(customer2);
-        testUsers.add(admin);
-        usersCount = testUsers.size();
     }
 
     @Override
@@ -49,13 +40,13 @@ public class UserDAOPostgres implements UserDAO{
     @Override
     public User getByID(int ID){
         User foundUser = null;
-        Connection conn = ConnectionUtil.getConnection();
-        String query = "SELECT * FROM users WHERE user_id = "+ID;
+        String query = "SELECT * FROM users WHERE user_id = ?";
 
-        try{
-            Statement statement = conn.createStatement();
+        try(Connection conn = ConnectionUtil.getConnection()){
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1,ID);
 
-            ResultSet result = statement.executeQuery(query);
+            ResultSet result = preparedStatement.executeQuery();
             if(result.next()){
                 foundUser = new User(result);
             }
@@ -72,30 +63,32 @@ public class UserDAOPostgres implements UserDAO{
 
     @Override
     public User getUserByEmail(String email){
-        System.out.println("Soy un usuario encontrado por ID");
-        User foundUser=null;
-        for(User u: testUsers){
-            if(u.getEmail().equals(email)){
-                foundUser = u;
-                break;
+        User foundUser = null;
+        String query = "SELECT * FROM users WHERE email = ?";
+
+        try(Connection conn = ConnectionUtil.getConnection()){
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1,email);
+
+            ResultSet result = preparedStatement.executeQuery();
+            if(result.next()){
+                foundUser = new User(result);
             }
+            else{
+                System.out.println("No se encontro usuario");
+            }
+        }catch (SQLException e){
+            System.out.println("No se puedo obtener el usuario");
+            e.printStackTrace();
         }
+
         return foundUser;
     }
 
     @Override
     public User update(User user){
         System.out.println("Se actualizo el usuario");
-        for(User u: testUsers){
-            if(u.getUserID()==user.getUserID()){
-                u.setFirstName(user.getFirstName());
-                u.setEmail(user.getEmail());
-                u.setRole(user.getRole());
-                u.setLastName(user.getLastName());
-                u.setPassword(user.getPassword());
-                break;
-            }
-        }
+
         return  null;
     }
 }

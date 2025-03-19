@@ -21,9 +21,9 @@ public class UserController {
         String lastName = scan.nextLine();
         System.out.println("email: ");
         String email = scan.nextLine();
-        while (!userService.validateEmail(email) && !userService.isEmailAvailable(email)){
+        while (!userService.validateEmail(email) || !userService.isEmailAvailable(email)){
             if(!userService.validateEmail(email)){
-                System.out.println("Password invalid");
+                System.out.println("email invalid");
                 email = scan.nextLine();
             }
             else{

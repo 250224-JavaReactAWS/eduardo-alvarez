@@ -19,7 +19,12 @@ public class Main {
 
         UserController userController = new UserController(userService,scan);
 
-        User loggedUser = userController.registerNewUser();
-        System.out.println(loggedUser.toString());
+        System.out.println(userService.validateEmail("hsdbfuhybcysr"));
+        System.out.println(userService.validateEmail("eduardo@revature.net"));
+        System.out.println(userService.validateEmail("eduardo@aragon.unam.mx"));
+        System.out.println(userService.validateEmail("eduardo@gmail.com"));
+
+        User createdUser = userController.registerNewUser();
+        System.out.println(createdUser.toString());
     }
 }

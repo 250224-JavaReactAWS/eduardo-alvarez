@@ -2,6 +2,7 @@ package com.revature.services;
 
 import com.revature.models.User;
 import com.revature.repos.UserDAO;
+import java.util.regex.Pattern;
 
 public class UserService {
     private UserDAO userDAO;
@@ -11,8 +12,12 @@ public class UserService {
     }
 
     public boolean validateEmail(String email){
-        //Agregar validacion del correo
-        return true;
+        boolean isValid = true;
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern p = Pattern.compile(emailRegex);
+        isValid = email != null && p.matcher(email).matches();
+        return isValid;
     }
 
     public boolean validatePassword(String password) {
@@ -58,6 +63,7 @@ public class UserService {
     public User registerNewUser(String firstName, String lastName, String email, String password){
 
         // Validar contraseña y correo antes que nada
+
         User newUser = new User(firstName,lastName,email,password);
         return userDAO.create(newUser);
     }
