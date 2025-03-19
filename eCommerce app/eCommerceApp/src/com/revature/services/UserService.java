@@ -18,7 +18,7 @@ public class UserService {
     public boolean validatePassword(String password) {
         boolean isValid = true;
         int minimunCharsInPassword = 8;
-        if (password.length() > minimunCharsInPassword) {
+        if (password.length() < minimunCharsInPassword) {
             System.out.println("Contraseña muy corta");
             isValid = false;
         }
@@ -59,7 +59,7 @@ public class UserService {
 
         // Validar contraseña y correo antes que nada
         User newUser = new User(firstName,lastName,email,password);
-        return userDAO.createUser(newUser);
+        return userDAO.create(newUser);
     }
 
     //TODO login

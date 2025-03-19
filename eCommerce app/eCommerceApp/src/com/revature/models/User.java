@@ -14,12 +14,14 @@ public class User {
         lastName = lName;
         this.email=email;
         this.password = password;
+        role = Role.USER;
     }
     public  User(String fName, String lName, String email, String password){
         firstName = fName;
         lastName = lName;
         this.email=email;
         this.password = password;
+        role = Role.USER;
     }
 
     public int getUserID() {
@@ -68,5 +70,11 @@ public class User {
 
     public void setRole(Role role) {
         this.role = role;
+    }
+
+    @Override
+    public String toString(){
+        return "My ID: "+userID+" My firstname: "+firstName+" My lastname: "+lastName+" My email: "+email+" My password: "+password+" My role: "+
+                role;
     }
 }
