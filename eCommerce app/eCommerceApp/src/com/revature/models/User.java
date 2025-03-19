@@ -8,6 +8,13 @@ public class User {
     private String password;
     private Role role;
 
+    public  User(int id,String fName, String lName, String email, String password){
+        userID = id;
+        firstName = fName;
+        lastName = lName;
+        this.email=email;
+        this.password = password;
+    }
     public  User(String fName, String lName, String email, String password){
         firstName = fName;
         lastName = lName;
