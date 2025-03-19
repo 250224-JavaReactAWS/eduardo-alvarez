@@ -3,10 +3,7 @@ package com.revature.repos;
 import com.revature.models.User;
 import com.revature.util.ConnectionUtil;
 
-import java.sql.Connection;
-import java.sql.ResultSet;
-import java.sql.SQLException;
-import java.sql.Statement;
+import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -28,8 +25,25 @@ public class UserDAOPostgres implements UserDAO{
 
     @Override
     public  User create(User user){
-        //Connection conn = ConnectionUtil.getConnection();
-        return user;
+        User newUser = null;
+        try (Connection conn = ConnectionUtil.getConnection()){
+            String query = "INSERT INTO users (first_name, last_name, email, password) VALUES (?,?,?,?) RETURNING *";
+
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1,user.getFirstName());
+            preparedStatement.setString(2,user.getLastName());
+            preparedStatement.setString(3,user.getEmail());
+            preparedStatement.setString(4,user.getPassword());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if(resultSet.next()){
+                newUser = new User(resultSet);
+            }
+        }catch (SQLException e){
+            System.out.println("No se pudo crear al usuario");
+            e.printStackTrace();
+        }
+        return newUser;
     }
 
     @Override

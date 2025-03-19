@@ -19,7 +19,7 @@ public class Main {
 
         UserController userController = new UserController(userService,scan);
 
-        User loggedUser = userDAO.getByID(1);
+        User loggedUser = userController.registerNewUser();
         System.out.println(loggedUser.toString());
     }
 }
