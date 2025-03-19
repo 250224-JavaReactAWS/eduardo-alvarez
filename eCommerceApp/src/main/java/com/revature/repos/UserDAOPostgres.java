@@ -14,7 +14,7 @@ public class UserDAOPostgres implements UserDAO{
         User customer1 = new User(1,"Juan","Perez","enail","password");
         User customer2 = new User(2,"Pepe","Gonzales","enail2","password");
         User admin = new User(3,"Pancho","Hernandez","enail3","password123");
-        testUsers=new ArrayList<>();
+        testUsers=new ArrayList<User>();
         testUsers.add(customer1);
         testUsers.add(customer2);
         testUsers.add(admin);
