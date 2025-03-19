@@ -14,7 +14,7 @@ public class ConnectionUtil {
 
     }
 
-    public static Connection getInstance(){
+    public static Connection getConnection(){
         try {
             if(conn!=null && !conn.isClosed()){
                 return conn;

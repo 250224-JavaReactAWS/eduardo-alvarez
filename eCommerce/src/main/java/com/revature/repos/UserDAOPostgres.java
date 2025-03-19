@@ -1,7 +1,12 @@
 package com.revature.repos;
 
 import com.revature.models.User;
+import com.revature.util.ConnectionUtil;
 
+import java.sql.Connection;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -23,22 +28,28 @@ public class UserDAOPostgres implements UserDAO{
 
     @Override
     public  User create(User user){
-        System.out.println("Soy un usuario nuevo");
-        testUsers.add(user);
-        usersCount=testUsers.size();
+        //Connection conn = ConnectionUtil.getConnection();
         return user;
     }
 
     @Override
     public User getByID(int ID){
-        System.out.println("Soy un usuario encontrado por ID");
-        User foundUser=null;
-        for(User u: testUsers){
-            if(u.getUserID()==ID){
-                foundUser = u;
-                break;
-            }
+        User foundUser = null;
+        Connection conn = ConnectionUtil.getConnection();
+        String query = "SELECT * FROM users WHERE user_id = "+ID;
+
+        try{
+            Statement statement = conn.createStatement();
+
+            ResultSet result = statement.executeQuery(query);
+            result.next();
+
+            foundUser = new User(result);
+        }catch (SQLException e){
+            System.out.println("No se puedo obtener el usuario");
+            e.printStackTrace();
         }
+
         return foundUser;
     }
 
