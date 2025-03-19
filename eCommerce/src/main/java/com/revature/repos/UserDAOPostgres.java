@@ -42,9 +42,12 @@ public class UserDAOPostgres implements UserDAO{
             Statement statement = conn.createStatement();
 
             ResultSet result = statement.executeQuery(query);
-            result.next();
-
-            foundUser = new User(result);
+            if(result.next()){
+                foundUser = new User(result);
+            }
+            else{
+                System.out.println("No se encontro usuario");
+            }
         }catch (SQLException e){
             System.out.println("No se puedo obtener el usuario");
             e.printStackTrace();
