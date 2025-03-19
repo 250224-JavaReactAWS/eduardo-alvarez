@@ -1,7 +1,5 @@
 package com.revature;
 
-import com.revature.controllers.UserController;
-import com.revature.models.User;
 import com.revature.repos.UserDAO;
 import com.revature.repos.UserDAOPostgres;
 import com.revature.services.UserService;
@@ -20,5 +18,7 @@ public class Main {
         System.out.println(newUser.toString());
 
         User loggedUser = userController.loginUser();
+
+        System.out.println(loggedUser.toString());
     }
 }

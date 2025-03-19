@@ -1,6 +1,5 @@
 package com.revature.controllers;
 
-import com.revature.models.User;
 import com.revature.services.UserService;
 
 import java.util.Scanner;
