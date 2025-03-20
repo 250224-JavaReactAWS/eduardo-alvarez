@@ -2,17 +2,24 @@ package com.revature.services;
 
 import com.revature.models.User;
 import com.revature.repos.UserDAO;
+import com.revature.repos.UserDAOPostgres;
+
+import java.util.regex.Pattern;
 
 public class UserService {
     private UserDAO userDAO;
 
-    public UserService(UserDAO userDAO){
+    public UserService(UserDAO userDAO) {
         this.userDAO = userDAO;
     }
 
-    public boolean validateEmail(String email){
-        //Agregar validacion del correo
-        return true;
+    public boolean validateEmail(String email) {
+        boolean isValid = true;
+        String emailRegex = "^[a-zA-Z0-9_+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@" +
+                "(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        Pattern p = Pattern.compile(emailRegex);
+        isValid = email != null && p.matcher(email).matches();
+        return isValid;
     }
 
     public boolean validatePassword(String password) {
@@ -50,31 +57,53 @@ public class UserService {
         return isValid;
     }
 
-    public boolean isEmailAvailable(String email){
+    public boolean isEmailAvailable(String email) {
         return userDAO.getUserByEmail(email) == null;
     }
 
     //TODO register
-    public User registerNewUser(String firstName, String lastName, String email, String password){
+    public User registerNewUser(String firstName, String lastName, String email, String password) {
 
         // Validar contraseña y correo antes que nada
-        User newUser = new User(firstName,lastName,email,password);
+
+        User newUser = new User(firstName, lastName, email, password);
         return userDAO.create(newUser);
     }
 
     //TODO login
-    public User loginUser(String email, String password){
+    public User loginUser(String email, String password) {
         // Obtener al usuario por el email
         User desiredUser = userDAO.getUserByEmail(email);
-        if (desiredUser==null){
+        if (desiredUser == null) {
             //No se encontro
-            return  null;
+            System.out.println("No se encontro correo");
+            return null;
         }
-        if(desiredUser.getPassword().equals(password)){
+        if (desiredUser.getPassword().equals(password)) {
             return desiredUser;
         }
         return null;
     }
 
     //TODO update
+
+    public User updateInfo(int id, String firstName, String lastName, String email, String password) {
+        User user = userDAO.getByID(id);
+        if (user != null) {
+            if (!firstName.isEmpty()) {
+                user.setFirstName(firstName);
+            }
+            if (!lastName.isEmpty()) {
+                user.setLastName(lastName);
+            }
+            if (!email.isEmpty()) {
+                user.setEmail(email);
+            }
+            if (!password.isEmpty()) {
+                user.setPassword(password);
+            }
+            user = userDAO.update(user);
+        }
+        return user;
+    }
 }

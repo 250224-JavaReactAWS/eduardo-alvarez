@@ -1,5 +1,8 @@
 package com.revature.models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class User {
     private int userID;
     private String firstName;
@@ -7,6 +10,10 @@ public class User {
     private String email;
     private String password;
     private Role role;
+
+    public  User(){
+
+    }
 
     public  User(int id,String fName, String lName, String email, String password){
         userID = id;
@@ -22,6 +29,20 @@ public class User {
         this.email=email;
         this.password = password;
         role = Role.USER;
+    }
+
+    public  User(ResultSet rs){
+        try {
+            userID = rs.getInt("user_id");
+            firstName = rs.getString("first_name");
+            lastName = rs.getString("last_name");
+            email = rs.getString("email");
+            password = rs.getString("password");
+            role = Role.valueOf(rs.getString("role"));
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Algo salio mal al crear con set result");
+        }
     }
 
     public int getUserID() {
