@@ -25,6 +25,5 @@ public class Main {
         loggedUser = userController.UpdateUser(loggedUser);
         System.out.println("despues del update");
         System.out.println(loggedUser.toString());
-
     }
 }

@@ -34,6 +34,7 @@ public class User {
             lastName = rs.getString("last_name");
             email = rs.getString("email");
             password = rs.getString("password");
+            role = Role.valueOf(rs.getString("role"));
         } catch (SQLException e) {
             e.printStackTrace();
             System.out.println("Algo salio mal al crear con set result");
