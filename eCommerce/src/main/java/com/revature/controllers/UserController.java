@@ -58,4 +58,30 @@ public class UserController {
         System.out.println("Bienvenido "+loggedUser.getFirstName()+" "+loggedUser.getLastName());
         return loggedUser;
     }
+
+    public User UpdateUser(User user){
+        System.out.println("New firstname:");
+        String newFirstName = scan.nextLine();
+        System.out.println("New lastname:");
+        String newLastName = scan.nextLine();
+        System.out.println("New email");
+        String newEmail = scan.nextLine();
+        while (!userService.validateEmail(newEmail) || !userService.isEmailAvailable(newEmail)){
+            if(!userService.validateEmail(newEmail)){
+                System.out.println("email invalid");
+                newEmail = scan.nextLine();
+            }
+            else{
+                System.out.println("Email ya registrado");
+                newEmail = scan.nextLine();
+            }
+        }
+        System.out.println("New password");
+        String newPasssword = scan.nextLine();
+        while (!userService.validatePassword(newPasssword)){
+            System.out.println("No password. Otra vez");
+            newPasssword= scan.nextLine();
+        }
+        return userService.updateInfo(user.getUserID(),newFirstName,newLastName,newEmail,newPasssword);
+    }
 }

@@ -19,12 +19,12 @@ public class Main {
 
         UserController userController = new UserController(userService,scan);
 
-        System.out.println(userService.validateEmail("hsdbfuhybcysr"));
-        System.out.println(userService.validateEmail("eduardo@revature.net"));
-        System.out.println(userService.validateEmail("eduardo@aragon.unam.mx"));
-        System.out.println(userService.validateEmail("eduardo@gmail.com"));
+        User loggedUser = userController.loginUser();
+        System.out.println("Antes del update");
+        System.out.println(loggedUser.toString());
+        loggedUser = userController.UpdateUser(loggedUser);
+        System.out.println("despues del update");
+        System.out.println(loggedUser.toString());
 
-        User createdUser = userController.registerNewUser();
-        System.out.println(createdUser.toString());
     }
 }
