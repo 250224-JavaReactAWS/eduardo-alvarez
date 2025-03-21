@@ -20,6 +20,8 @@ public class JavalinUtil {
                     config.router.apiBuilder(() -> {
                         path("/users", () -> {
                             post("/register", userController::registerNewUser);
+                            post("/login", userController::loginUser);
+                            put("/update",userController::updateUser);
                         });
                     });
                 })

@@ -86,7 +86,7 @@ public class UserDAOPostgres implements UserDAO {
     @Override
     public User update(User updatedUser) {
         if (updatedUser == null) {
-            System.out.println("El usuario no se encontro por ID");
+            return null;
         } else {
             String query = "UPDATE users set first_name = ?, last_name = ?, email = ?, password = ? WHERE user_id = ? RETURNING *";
 
