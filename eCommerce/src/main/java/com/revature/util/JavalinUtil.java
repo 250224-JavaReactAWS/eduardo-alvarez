@@ -32,6 +32,7 @@ public class JavalinUtil {
                         path("/products",()->{
                             post("/register", productController::registerNewProuct);
                             get("/",productController::getAllProducts);
+                            put("/update", productController::updateProduct);
                         });
                     });
                 })

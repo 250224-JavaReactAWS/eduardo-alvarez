@@ -22,14 +22,14 @@ public class ProductController {
 
     public void registerNewProuct(Context ctx) {
         User loggerUser = userService.getUserByID(ctx.sessionAttribute("userID"));
-        if (loggerUser.getRole()!= Role.ADMIN){
+        if (loggerUser.getRole() != Role.ADMIN) {
             ctx.status(401);
             ctx.json(new ErrorMessage("You do not have permission"));
             logger.warn("Register product attempt without permission by user with ID: " + loggerUser.getUserID());
             return;
         }
 
-            Product requestProduct = ctx.bodyAsClass(Product.class);
+        Product requestProduct = ctx.bodyAsClass(Product.class);
         System.out.println(requestProduct.getName());
         if (!productService.validatePrice(requestProduct.getPrice())) {
             ctx.status(400);
@@ -64,14 +64,52 @@ public class ProductController {
         ctx.json(registeredProduct);
     }
 
-    public void getAllProducts(Context ctx){
-        if(ctx.sessionAttribute("userID")==null){
+    public void getAllProducts(Context ctx) {
+        if (ctx.sessionAttribute("userID") == null) {
             ctx.status(401);
             ctx.json(new ErrorMessage("You must be logged to see the products"));
             logger.warn("Attempt of show all products without session");
             return;
         }
-        ctx.status(400);
+        ctx.status(200);
         ctx.json(productService.getAllProducts());
+    }
+
+    public void updateProduct(Context ctx) {
+        Product productWithNewInfo = ctx.bodyAsClass(Product.class);
+        User loggedUser;
+        if (ctx.sessionAttribute("userID") == null) {
+            ctx.status(401);
+            ctx.json(new ErrorMessage("You must be logged to do this actions"));
+            logger.warn("Attempt to update product info without login");
+            return;
+        } else {
+             loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
+        }
+
+        if(loggedUser.getRole()!=Role.ADMIN){
+            ctx.status(401);
+            ctx.json(new ErrorMessage("You do not have permission to do this action"));
+            logger.warn("Attempt of update without permission by user with ID: "+loggedUser.getUserID());
+            return;
+        }
+
+        if(productWithNewInfo.getProductID()==0){
+            ctx.status(400);
+            ctx.json(new ErrorMessage("Product ID not provided"));
+            logger.warn("Attempt of update product without ID");
+            return;
+        }
+
+        Product updatedProduct  = productService.updateProduct(productWithNewInfo);
+        if (updatedProduct == null) {
+            ctx.json(new ErrorMessage("User update failed"));
+            ctx.status(400);
+            return;
+        }
+
+        ctx.status(200);
+        logger.info("Product with ID: "+ updatedProduct.getProductID()+" was updated");
+        ctx.json(updatedProduct);
     }
 }

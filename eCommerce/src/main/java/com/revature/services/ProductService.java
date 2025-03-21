@@ -31,4 +31,34 @@ public class ProductService {
     public List<Product> getAllProducts(){
         return productDAO.getAll();
     }
+
+    public Product updateProduct(Product requestProduct){
+        Product updatedProduct = new Product();
+        Product currentUser = productDAO.getByID(requestProduct.getProductID());
+        updatedProduct.setProductID(currentUser.getProductID());
+        //Name
+        if (requestProduct.getName() == null || requestProduct.getName().isBlank()) {
+            updatedProduct.setName(currentUser.getName());
+        }
+        else {
+            updatedProduct.setName(requestProduct.getName());
+        }
+        //Price
+        if (requestProduct.getPrice()<0) {
+            updatedProduct.setPrice(currentUser.getPrice());
+        }
+        else {
+            updatedProduct.setPrice(requestProduct.getPrice());
+        }
+        //Stock
+        if (requestProduct.getStock()<0) {
+            updatedProduct.setStock(currentUser.getStock());
+        }
+        else {
+            updatedProduct.setStock(requestProduct.getStock());
+        }
+
+        updatedProduct = productDAO.update(updatedProduct);
+        return updatedProduct;
+    }
 }
