@@ -25,8 +25,11 @@ public class UserService {
     public boolean validatePassword(String password) {
         boolean isValid = true;
         int minimunCharsInPassword = 8;
+        if(password==null){
+            return false;
+        }
         if (password.length() < minimunCharsInPassword) {
-            System.out.println("Contraseña muy corta");
+           // System.out.println("Contraseña muy corta");
             isValid = false;
         }
 
@@ -48,11 +51,6 @@ public class UserService {
                     break;
                 }
             }
-        }
-        if (!hasLowerCase) {
-            System.out.println("La contraseña debe contener una letra minuscula por lo menos.");
-        } else if (!hasUpperCase) {
-            System.out.println("La contraseña debe contener una letra mayuscula por lo menos.");
         }
         return isValid;
     }
@@ -86,23 +84,45 @@ public class UserService {
 
     //TODO update
 
-    public User updateInfo(int id, String firstName, String lastName, String email, String password) {
-        User user = userDAO.getByID(id);
-        if (user != null) {
-            if (!firstName.isEmpty()) {
-                user.setFirstName(firstName);
-            }
-            if (!lastName.isEmpty()) {
-                user.setLastName(lastName);
-            }
-            if (!email.isEmpty()) {
-                user.setEmail(email);
-            }
-            if (!password.isEmpty()) {
-                user.setPassword(password);
-            }
-            user = userDAO.update(user);
+    public User updateInfo(User requestUser) {
+        User updatedUser = new User();
+        User currentUser = userDAO.getByID(requestUser.getUserID());
+        updatedUser.setUserID(currentUser.getUserID());
+        //First name
+        if (requestUser.getFirstName() == null || requestUser.getFirstName().isBlank()) {
+            updatedUser.setFirstName(currentUser.getFirstName());
         }
-        return user;
+        else {
+            updatedUser.setFirstName(requestUser.getFirstName());
+        }
+        //Last name
+        if (requestUser.getLastName() == null || requestUser.getLastName().isBlank()) {
+            updatedUser.setLastName(currentUser.getLastName());
+        }
+        else {
+            updatedUser.setLastName(requestUser.getLastName());
+        }
+        //Email
+        if (requestUser.getEmail() == null || requestUser.getEmail().isBlank()) {
+            updatedUser.setEmail(currentUser.getEmail());
+        }
+        else {
+            updatedUser.setEmail(requestUser.getEmail());
+        }
+        //Password
+        if (requestUser.getPassword() == null || requestUser.getPassword().isBlank()) {
+            updatedUser.setPassword(currentUser.getPassword());
+        }
+        else {
+            updatedUser.setPassword(requestUser.getPassword());
+        }
+
+
+        updatedUser = userDAO.update(updatedUser);
+        return updatedUser;
+    }
+
+    public User getUserByID(int id) {
+        return userDAO.getByID(id);
     }
 }
