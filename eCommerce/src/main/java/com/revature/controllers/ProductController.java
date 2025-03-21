@@ -64,5 +64,14 @@ public class ProductController {
         ctx.json(registeredProduct);
     }
 
-
+    public void getAllProducts(Context ctx){
+        if(ctx.sessionAttribute("userID")==null){
+            ctx.status(401);
+            ctx.json(new ErrorMessage("You must be logged to see the products"));
+            logger.warn("Attempt of show all products without session");
+            return;
+        }
+        ctx.status(400);
+        ctx.json(productService.getAllProducts());
+    }
 }

@@ -36,6 +36,11 @@ public class UserDAOPostgres implements UserDAO {
     }
 
     @Override
+    public List<User> getAll() {
+        return List.of();
+    }
+
+    @Override
     public User getByID(int ID) {
         User foundUser = null;
         String query = "SELECT * FROM users WHERE user_id = ?";
@@ -114,5 +119,10 @@ public class UserDAOPostgres implements UserDAO {
 
         }
         return updatedUser;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        return false;
     }
 }

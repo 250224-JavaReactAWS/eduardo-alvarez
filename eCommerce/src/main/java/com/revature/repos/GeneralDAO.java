@@ -1,9 +1,15 @@
 package com.revature.repos;
 
+import java.util.List;
+
 public interface GeneralDAO <T> {
     T create(T obj);
 
-    T getByID(int userID);
+    List<T> getAll();
+
+    T getByID(int id);
 
     T update(T obj);
+
+    boolean deleteById(int id);
 }

@@ -1,12 +1,14 @@
 package com.revature.services;
 
 import com.revature.models.Product;
-import com.revature.repos.ProductDAO;
+import com.revature.repos.ProductDAOPostgres;
+
+import java.util.List;
 
 public class ProductService {
-    private ProductDAO productDAO;
+    private ProductDAOPostgres productDAO;
 
-    public ProductService(ProductDAO productDAO) {
+    public ProductService(ProductDAOPostgres productDAO) {
         this.productDAO = productDAO;
     }
 
@@ -24,5 +26,9 @@ public class ProductService {
     }
     public boolean validateName(String name){
         return name.isBlank();
+    }
+
+    public List<Product> getAllProducts(){
+        return productDAO.getAll();
     }
 }

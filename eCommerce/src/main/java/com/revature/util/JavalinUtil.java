@@ -2,9 +2,7 @@ package com.revature.util;
 
 import com.revature.controllers.ProductController;
 import com.revature.controllers.UserController;
-import com.revature.models.Product;
-import com.revature.models.User;
-import com.revature.repos.ProductDAO;
+import com.revature.repos.ProductDAOPostgres;
 import com.revature.repos.UserDAO;
 import com.revature.repos.UserDAOPostgres;
 import com.revature.services.ProductService;
@@ -20,7 +18,7 @@ public class JavalinUtil {
         UserService userService = new UserService(userDAO);
         UserController userController = new UserController(userService);
 
-        ProductDAO productDAO = new ProductDAO();
+        ProductDAOPostgres productDAO = new ProductDAOPostgres();
         ProductService productService = new ProductService(productDAO);
         ProductController productController = new ProductController(productService,userService);
 
@@ -33,6 +31,7 @@ public class JavalinUtil {
                         });
                         path("/products",()->{
                             post("/register", productController::registerNewProuct);
+                            get("/",productController::getAllProducts);
                         });
                     });
                 })

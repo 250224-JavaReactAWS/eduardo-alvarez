@@ -23,6 +23,7 @@ public class Product {
 
     public Product(ResultSet rs) {
         try {
+            productID=rs.getInt("product_id");
             name = rs.getString("name");
             description = rs.getString("description");
             price = rs.getFloat("price");
