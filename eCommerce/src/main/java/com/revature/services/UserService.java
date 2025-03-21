@@ -75,8 +75,7 @@ public class UserService {
         // Obtener al usuario por el email
         User desiredUser = userDAO.getUserByEmail(email);
         if (desiredUser == null) {
-            //No se encontro
-            System.out.println("No se encontro correo");
+            //System.out.println("No se encontro correo");
             return null;
         }
         if (desiredUser.getPassword().equals(password)) {

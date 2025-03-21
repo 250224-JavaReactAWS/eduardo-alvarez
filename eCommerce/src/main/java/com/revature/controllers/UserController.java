@@ -25,18 +25,20 @@ public class UserController {
         if (!userService.validateEmail(requestUser.getEmail())) {
             ctx.status(400);
             ctx.json(new ErrorMessage("Email does not have a valid address"));
+            logger.warn("Register user attempt with invalid email: "+requestUser.getEmail());
             return;
         }
         if (!userService.isEmailAvailable(requestUser.getEmail())) {
             ctx.status(400);
             ctx.json(new ErrorMessage("Email already registered"));
-            logger.warn("Register attempt made for taken email: "+requestUser.getEmail());
+            logger.warn("Register user attempt made for taken email: "+requestUser.getEmail());
             return;
         }
 
         if (!userService.validatePassword(requestUser.getPassword())) {
             ctx.status(400);
             ctx.json(new ErrorMessage("Invalid password. It should contains at least 8 characters and an upper and lower case"));
+            logger.warn("Register user attempt with invalid password: "+requestUser.getPassword());
             return;
         }
 
@@ -44,6 +46,7 @@ public class UserController {
         if(registeredUser == null){
             ctx.status(500);
             ctx.json(new ErrorMessage("Something went wrong trying to register new user"));
+            logger.error("Something went wrong trying to register the user with the info: "+requestUser.toString());
             return;
         }
 
@@ -52,20 +55,23 @@ public class UserController {
         ctx.json(registeredUser);
     }
 
-    public User loginUser() {
-        System.out.println("Login");
-        System.out.println("email: ");
-        String email = scan.nextLine();
-        System.out.println("Password:");
-        String password = scan.nextLine();
+    public void loginUser(Context ctx) {
+        User requestUser = ctx.bodyAsClass(User.class);
 
-        User loggedUser = userService.loginUser(email, password);
+        User loggedUser = userService.loginUser(requestUser.getEmail(), requestUser.getPassword());
         if (loggedUser == null) {
-            System.out.println("email o password incorrectos");
-            return null;
+            ctx.json(new ErrorMessage("Email or password incorrect"));
+            ctx.status(400);
+            return;
         }
-        System.out.println("Bienvenido " + loggedUser.getFirstName() + " " + loggedUser.getLastName());
-        return loggedUser;
+
+        ctx.status(200);
+        ctx.json(loggedUser);
+
+        ctx.sessionAttribute("userID", loggedUser.getUserID());
+        ctx.sessionAttribute("role", loggedUser.getRole());
+
+        logger.info("User logged with ID: "+loggedUser.getUserID());
     }
 
     public User UpdateUser(User user) {
