@@ -9,8 +9,6 @@ import java.util.List;
 
 public class UserDAOPostgres implements UserDAO {
 
-    public int usersCount;
-
     public UserDAOPostgres() {
     }
 

@@ -1,5 +1,6 @@
 package com.revature.services;
 
+import com.revature.models.Role;
 import com.revature.models.User;
 import com.revature.repos.UserDAO;
 import com.revature.repos.UserDAOPostgres;
@@ -124,5 +125,9 @@ public class UserService {
 
     public User getUserByID(int id) {
         return userDAO.getByID(id);
+    }
+
+    public boolean isAdmin(User user){
+        return user.getRole()== Role.ADMIN;
     }
 }

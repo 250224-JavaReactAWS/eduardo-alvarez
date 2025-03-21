@@ -1,5 +1,8 @@
 package com.revature.models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class Product {
     private int productID;
     private String name;
@@ -7,11 +10,27 @@ public class Product {
     private float price;
     private int stock;
 
-    public Product(String productName, String productDescription, float productPrice, int stock){
+    public Product() {
+    }
+
+    public Product(String productName, String productDescription, float productPrice, int stock) {
         name = productName;
         description = productDescription;
         price = productPrice;
         this.stock = stock;
+    }
+
+
+    public Product(ResultSet rs) {
+        try {
+            name = rs.getString("name");
+            description = rs.getString("description");
+            price = rs.getFloat("price");
+            stock = rs.getInt("stock");
+        } catch (SQLException e) {
+            e.printStackTrace();
+            System.out.println("Algo salio mal al crear product con set result");
+        }
     }
 
     public int getProductID() {
@@ -53,4 +72,5 @@ public class Product {
     public void setStock(int stock) {
         this.stock = stock;
     }
+
 }
