@@ -117,6 +117,26 @@ public class ProductDAOPostgres implements ProductDAO {
 
     @Override
     public boolean deleteById(int id) {
-        return false;
+        Product product = getByID(id);
+        boolean result = false;
+        if (product == null) {
+            result = false;
+        } else {
+            String query = "delete from products where product_id=? RETURNING *";
+            try (Connection conn = ConnectionUtil.getConnection()) {
+                PreparedStatement preparedStatement = conn.prepareStatement(query);
+                preparedStatement.setInt(1, product.getProductID());
+                ResultSet resultSet = preparedStatement.executeQuery();
+                if (resultSet.next()) {
+                    result = true;
+                } else {
+                    result = false;
+                }
+            } catch (SQLException e) {
+                e.printStackTrace();
+                result = false;
+            }
+        }
+        return result;
     }
 }

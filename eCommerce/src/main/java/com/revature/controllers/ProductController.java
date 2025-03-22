@@ -84,24 +84,24 @@ public class ProductController {
             logger.warn("Attempt to update product info without login");
             return;
         } else {
-             loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
+            loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
         }
 
-        if(loggedUser.getRole()!=Role.ADMIN){
+        if (loggedUser.getRole() != Role.ADMIN) {
             ctx.status(401);
             ctx.json(new ErrorMessage("You do not have permission to do this action"));
-            logger.warn("Attempt of update without permission by user with ID: "+loggedUser.getUserID());
+            logger.warn("Attempt of update without permission by user with ID: " + loggedUser.getUserID());
             return;
         }
 
-        if(productWithNewInfo.getProductID()==0){
+        if (productWithNewInfo.getProductID() == 0) {
             ctx.status(400);
             ctx.json(new ErrorMessage("Product ID not provided"));
             logger.warn("Attempt of update product without ID");
             return;
         }
 
-        Product updatedProduct  = productService.updateProduct(productWithNewInfo);
+        Product updatedProduct = productService.updateProduct(productWithNewInfo);
         if (updatedProduct == null) {
             ctx.json(new ErrorMessage("User update failed"));
             ctx.status(400);
@@ -109,7 +109,66 @@ public class ProductController {
         }
 
         ctx.status(200);
-        logger.info("Product with ID: "+ updatedProduct.getProductID()+" was updated");
+        logger.info("Product with ID: " + updatedProduct.getProductID() + " was updated");
         ctx.json(updatedProduct);
+    }
+
+    public void getProductByID(Context ctx) {
+
+        if (ctx.sessionAttribute("userID") == null) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("You have to be logged to do this action"));
+            logger.warn("Attempt of get product by id without logging");
+            return;
+        } else {
+            User loggeUser = userService.getUserByID(ctx.sessionAttribute("userID"));
+        }
+        Product foundProduct = productService.getProductByID(Integer.parseInt(ctx.pathParam("ID")));
+        if (foundProduct == null) {
+            ctx.status(404);
+            ctx.json(new ErrorMessage("Product not founded"));
+            logger.warn("Product with ID " + ctx.pathParam("ID") + " not founded");
+            return;
+        }
+
+        ctx.status(200);
+        ctx.json(foundProduct);
+    }
+
+    public void deleteProduct(Context ctx) {
+        User loggedUser;
+        if (ctx.sessionAttribute("userID") == null) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("You must be logged to do that"));
+            logger.warn("Attempt of delete product without logging");
+            return;
+        } else {
+            loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
+        }
+
+        if (loggedUser.getRole() != Role.ADMIN) {
+            ctx.status(401);
+            ctx.json("You do not have permission to do that");
+            logger.warn("Attempt of product deletion by user with ID: " + loggedUser.getUserID());
+            return;
+        }
+
+        Product deletedProduct = productService.getProductByID(Integer.parseInt(ctx.pathParam("ID")));
+        if (deletedProduct == null) {
+            ctx.status(404);
+            ctx.json(new ErrorMessage("Product not found"));
+            logger.warn("Attempt of delete a non-existent product with ID " + ctx.pathParam("ID") + " by user with ID " + loggedUser.getUserID());
+            return;
+        }
+
+        if (productService.deleteProduct(deletedProduct.getProductID())) {
+            ctx.status(200);
+            ctx.json("Product deleted");
+            logger.info("Product " + deletedProduct.getName() + " with ID " + deletedProduct.getProductID() + " was deleted by user with ID " + loggedUser.getUserID());
+        } else {
+            ctx.status(500);
+            ctx.json(new ErrorMessage("Something went wrong deleting the product"));
+            logger.error("Something went wrong deleting the product");
+        }
     }
 }

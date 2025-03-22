@@ -61,4 +61,12 @@ public class ProductService {
         updatedProduct = productDAO.update(updatedProduct);
         return updatedProduct;
     }
+
+    public Product getProductByID(int ID){
+        return productDAO.getByID(ID);
+    }
+
+    public boolean deleteProduct(int id){
+        return productDAO.deleteById(id);
+    }
 }
