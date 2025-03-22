@@ -7,8 +7,7 @@ import com.revature.models.User;
 import java.util.List;
 
 public interface CartItemDAO extends GeneralDAO<CartItem>{
-   CartItem updateQuantity(int quantity);
-   void loadProduct(Product product);
+   CartItem updateQuantity(CartItem cartItem);
    List<CartItem> getAllCartItems(int userID);
    public boolean removeItem(int productID, int userID);
 }

@@ -19,13 +19,28 @@ public class CartItemPostgres implements CartItemDAO {
     }
 
     @Override
-    public CartItem updateQuantity(int quantity) {
-        return null;
-    }
+    public CartItem updateQuantity(CartItem cartItem) {
+        if(cartItem==null){
+            return null;
+        }
 
-    @Override
-    public void loadProduct(Product product) {
+        String query = "update cartitems set quantity=? where product_id=? and user_id=? RETURNING *";
+        CartItem updatedCartItem = null;
+        try (Connection conn = ConnectionUtil.getConnection()){
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1,cartItem.getQuantity());
+            preparedStatement.setInt(2,cartItem.getProductID());
+            preparedStatement.setInt(3,cartItem.getUserID());
 
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()){
+                updatedCartItem = new CartItem(resultSet);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+        return updatedCartItem;
     }
 
     @Override

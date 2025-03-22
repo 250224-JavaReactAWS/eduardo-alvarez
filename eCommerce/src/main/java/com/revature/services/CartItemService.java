@@ -37,4 +37,15 @@ public class CartItemService {
     public boolean removeProduct(int productID, int userID){
         return cartItemDAO.removeItem(productID,userID);
     }
+
+    public CartItem updateQuantity(CartItem cartItem){
+        if(cartItem==null){
+            return null;
+        }
+        if(cartItem.getQuantity()<=0){
+            System.out.println("Cantidad invalida");
+            return null;
+        }
+        return cartItemDAO.updateQuantity(cartItem);
+    }
 }
