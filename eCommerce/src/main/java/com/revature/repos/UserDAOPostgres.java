@@ -9,8 +9,6 @@ import java.util.List;
 
 public class UserDAOPostgres implements UserDAO {
 
-    public int usersCount;
-
     public UserDAOPostgres() {
     }
 
@@ -35,6 +33,11 @@ public class UserDAOPostgres implements UserDAO {
             e.printStackTrace();
         }
         return newUser;
+    }
+
+    @Override
+    public List<User> getAll() {
+        return List.of();
     }
 
     @Override
@@ -116,5 +119,10 @@ public class UserDAOPostgres implements UserDAO {
 
         }
         return updatedUser;
+    }
+
+    @Override
+    public boolean deleteById(int id) {
+        return false;
     }
 }

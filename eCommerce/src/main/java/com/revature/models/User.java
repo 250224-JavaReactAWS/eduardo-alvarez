@@ -41,7 +41,7 @@ public class User {
             role = Role.valueOf(rs.getString("role"));
         } catch (SQLException e) {
             e.printStackTrace();
-            System.out.println("Algo salio mal al crear con set result");
+            System.out.println("Algo salio mal al user crear con set result");
         }
     }
 
