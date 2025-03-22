@@ -19,6 +19,10 @@ public class CartItemService {
         return cartItemDAO.create(newCartItem);
     }
 
+    public List<CartItem> getAllCartItems(int userID){
+        return cartItemDAO.getAllCartItems(userID);
+    }
+
     public boolean validateItem(int productID, int userID) {
         boolean result = true;
         List<CartItem> currentItemsInCart = cartItemDAO.getAllCartItems(userID);

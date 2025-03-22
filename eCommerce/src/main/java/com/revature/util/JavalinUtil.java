@@ -1,10 +1,12 @@
 package com.revature.util;
 
 import com.revature.controllers.CartItemController;
+import com.revature.controllers.OrderController;
 import com.revature.controllers.ProductController;
 import com.revature.controllers.UserController;
 import com.revature.repos.*;
 import com.revature.services.CartItemService;
+import com.revature.services.OrderService;
 import com.revature.services.ProductService;
 import com.revature.services.UserService;
 import io.javalin.Javalin;
@@ -26,6 +28,10 @@ public class JavalinUtil {
         CartItemService cartItemService = new CartItemService(cartItemDAO);
         CartItemController cartItemController = new CartItemController(userService,productService,cartItemService);
 
+        OrderDAO orderPostgres = new OrderPostgres();
+        OrderService orderService = new OrderService(orderPostgres);
+        OrderController orderController = new OrderController(orderService,productService,cartItemService);
+
         return Javalin.create(config -> {
                     config.router.apiBuilder(() -> {
                         path("/users", () -> {
@@ -44,6 +50,9 @@ public class JavalinUtil {
                             post("/register",cartItemController::registerCartItem);
                             delete("/remove",cartItemController::removedItemFromCart);
                             put("/updateQuantity",cartItemController::updateCartItemQuantity);
+                        });
+                        path("/order",()->{
+                            post("/",orderController::registerOrder);
                         });
                     });
                 })
