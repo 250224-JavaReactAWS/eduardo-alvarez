@@ -42,6 +42,7 @@ public class JavalinUtil {
                         });
                         path("/cartItem",()->{
                             post("/register",cartItemController::registerCartItem);
+                            delete("/remove",cartItemController::removedItemFromCart);
                         });
                     });
                 })

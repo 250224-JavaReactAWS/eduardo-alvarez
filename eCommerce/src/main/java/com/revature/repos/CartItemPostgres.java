@@ -12,14 +12,10 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
-public class CartItemPostgres implements CartItemDAO{
+public class CartItemPostgres implements CartItemDAO {
     int currentIDProduct;
-    public CartItemPostgres(){
-    }
 
-    @Override
-    public boolean removeItem(User user, Product product) {
-        return false;
+    public CartItemPostgres() {
     }
 
     @Override
@@ -41,7 +37,7 @@ public class CartItemPostgres implements CartItemDAO{
 
         try {
             PreparedStatement preparedStatement = conn.prepareStatement(query);
-            preparedStatement.setInt(1,userID);
+            preparedStatement.setInt(1, userID);
             ResultSet resultSet = preparedStatement.executeQuery();
             while (resultSet.next()) {
                 CartItem retrieveCartItem = new CartItem(resultSet);
@@ -52,6 +48,28 @@ public class CartItemPostgres implements CartItemDAO{
             e.printStackTrace();
         }
         return allCartItems;
+    }
+
+    @Override
+    public boolean removeItem(int productID, int userID) {
+        boolean result = false;
+        String query = "delete from cartitems where product_id=? and user_id=? RETURNING *";
+        try (Connection conn = ConnectionUtil.getConnection()) {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setInt(1, productID);
+            preparedStatement.setInt(2, userID);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            if (resultSet.next()) {
+                result = true;
+            } else {
+                result = false;
+                System.out.println("Algo salio mal borrando el item");
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+            result = false;
+        }
+        return result;
     }
 
     @Override
@@ -66,15 +84,15 @@ public class CartItemPostgres implements CartItemDAO{
             preparedStatement.setInt(3, obj.getQuantity());
 
             System.out.println(obj.getUserID());
-            System.out.println( obj.getProductID());
-            System.out.println( obj.getQuantity());
+            System.out.println(obj.getProductID());
+            System.out.println(obj.getQuantity());
 
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 newCartItem = new CartItem(resultSet);
                 System.out.println(newCartItem.getUserID());
-                System.out.println( newCartItem.getProductID());
-                System.out.println( newCartItem.getQuantity());
+                System.out.println(newCartItem.getProductID());
+                System.out.println(newCartItem.getQuantity());
             }
         } catch (SQLException e) {
             System.out.println("No se pudo crear el cartItem");

@@ -68,4 +68,25 @@ public class CartItemController {
         ctx.status(201);
         ctx.json(registeredCartItem);
     }
+
+    public void removedItemFromCart(Context ctx){
+        CartItem requestCartItem = ctx.bodyAsClass(CartItem.class);
+        if (ctx.sessionAttribute("userID") == null) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("You must be logged to do that"));
+            logger.warn("Attempt of delete cart item without logging");
+            return;
+        } else {
+            requestCartItem.setUserID(ctx.sessionAttribute("userID"));
+        }
+        if (cartItemService.removeProduct(requestCartItem.getProductID(),requestCartItem.getUserID())) {
+            ctx.status(200);
+            ctx.json("Item removed");
+            logger.info("Item with ID: " + requestCartItem.getProductID() + " removed from user cart with ID: " + requestCartItem.getUserID() + " was deleted by user with ID " + requestCartItem.getUserID());
+        } else {
+            ctx.status(500);
+            ctx.json(new ErrorMessage("Something went wrong removing the product from cart"));
+            logger.error("Something went wrong removing the product from cart");
+        }
+    }
 }

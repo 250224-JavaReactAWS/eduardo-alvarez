@@ -33,4 +33,8 @@ public class CartItemService {
         }
         return result;
     }
+
+    public boolean removeProduct(int productID, int userID){
+        return cartItemDAO.removeItem(productID,userID);
+    }
 }
