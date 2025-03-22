@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.models.CartItem;
+import com.revature.models.Order;
 import com.revature.models.Product;
 import com.revature.models.User;
 import com.revature.repos.CartItemDAO;

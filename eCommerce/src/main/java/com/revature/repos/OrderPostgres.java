@@ -3,12 +3,14 @@ package com.revature.repos;
 import com.revature.models.CartItem;
 import com.revature.models.Order;
 import com.revature.models.OrderItem;
+import com.revature.models.Product;
 import com.revature.util.ConnectionUtil;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 
 public class OrderPostgres implements OrderDAO {
@@ -44,7 +46,23 @@ public class OrderPostgres implements OrderDAO {
 
     @Override
     public List<Order> getAll() {
-        return List.of();
+        List<Order> allOrders = new ArrayList<>();
+        Connection conn = ConnectionUtil.getConnection();
+
+        String query = "SELECT * FROM orders order by status";
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Order retrievedOrder = new Order(resultSet);
+                allOrders.add(retrievedOrder);
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not get all orders");
+            e.printStackTrace();
+        }
+        return allOrders;
     }
 
     @Override

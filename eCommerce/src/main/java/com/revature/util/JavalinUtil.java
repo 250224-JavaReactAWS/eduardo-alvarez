@@ -30,7 +30,7 @@ public class JavalinUtil {
 
         OrderDAO orderPostgres = new OrderPostgres();
         OrderService orderService = new OrderService(orderPostgres);
-        OrderController orderController = new OrderController(orderService,productService,cartItemService);
+        OrderController orderController = new OrderController(orderService,productService,cartItemService,userService);
 
         return Javalin.create(config -> {
                     config.router.apiBuilder(() -> {
@@ -52,6 +52,7 @@ public class JavalinUtil {
                             put("/updateQuantity",cartItemController::updateCartItemQuantity);
                         });
                         path("/order",()->{
+                            get("/showAll",orderController::getAllOrders);
                             post("/",orderController::registerOrder);
                         });
                     });

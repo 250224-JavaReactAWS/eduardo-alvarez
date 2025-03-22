@@ -1,13 +1,12 @@
 package com.revature.controllers;
 
 import com.revature.dtos.response.ErrorMessage;
-import com.revature.models.CartItem;
-import com.revature.models.Order;
-import com.revature.models.Product;
+import com.revature.models.*;
 import com.revature.repos.OrderDAO;
 import com.revature.services.CartItemService;
 import com.revature.services.OrderService;
 import com.revature.services.ProductService;
+import com.revature.services.UserService;
 import io.javalin.http.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -20,11 +19,13 @@ public class OrderController {
     private final ProductService productService;
     private final CartItemService cartItemService;
     private final Logger logger = LoggerFactory.getLogger(CartItem.class);
+    private final UserService userService;
 
-    public OrderController(OrderService orderService, ProductService productService, CartItemService cartItemService) {
+    public OrderController(OrderService orderService, ProductService productService, CartItemService cartItemService, UserService userService) {
         this.orderService = orderService;
         this.productService = productService;
         this.cartItemService = cartItemService;
+        this.userService = userService;
     }
 
     public void registerOrder(Context ctx) {
@@ -86,5 +87,26 @@ public class OrderController {
                 logger.error("Product with ID: " + item.getProductID() + " could not be removed after order from user cart with ID " + registeredOrder.getUserID());
             }
         }
+    }
+
+    public void getAllOrders(Context ctx){
+        if(ctx.sessionAttribute("userID")==null){
+            ctx.status(400);
+            ctx.json("You must be logged to do this action");
+            logger.warn("Attempt of show all orders without being logged");
+            return;
+        }
+        User loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
+        if(loggedUser.getRole()!= Role.ADMIN){
+            ctx.status(401);
+            ctx.json(new ErrorMessage("You do not have permission to do that action"));
+            logger.warn("Attempt of show all orders without permission by user with ID "+loggedUser.getUserID());
+            return;
+        }
+        List<Order> orders = orderService.getAllOrders();
+
+        ctx.status(200);
+        ctx.json(orders);
+        logger.info("All orders showed to user with ID: "+loggedUser.getUserID());
     }
 }

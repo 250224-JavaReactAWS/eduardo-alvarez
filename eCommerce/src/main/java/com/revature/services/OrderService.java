@@ -6,6 +6,8 @@ import com.revature.models.OrderStatus;
 import com.revature.models.Product;
 import com.revature.repos.OrderDAO;
 
+import java.util.List;
+
 public class OrderService {
     private final OrderDAO orderDAO;
 
@@ -25,5 +27,9 @@ public class OrderService {
     public boolean validateStock(Product product, CartItem cartItem){
         int remainStock = product.getStock()-cartItem.getQuantity();
         return remainStock>=0;
+    }
+
+    public List<Order> getAllOrders(){
+        return orderDAO.getAll();
     }
 }
