@@ -1,5 +1,6 @@
 package com.revature.controllers;
 
+import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.revature.dtos.response.ErrorMessage;
 import com.revature.models.*;
 import com.revature.repos.OrderDAO;
@@ -40,7 +41,7 @@ public class OrderController {
         }
 
         List<CartItem> itemsInCart = cartItemService.getAllCartItems(ctx.sessionAttribute("userID"));
-        if (itemsInCart == null || itemsInCart.size()==0) {
+        if (itemsInCart == null || itemsInCart.size() == 0) {
             ctx.status(400);
             ctx.json(new ErrorMessage("There is no items in your cart"));
             logger.warn("Attempt of register an order without item in cart by user with ID: " + ctx.sessionAttribute("userID"));
@@ -83,30 +84,69 @@ public class OrderController {
         for (CartItem item : itemsInCart) {
             if (cartItemService.removeProduct(item.getProductID(), registeredOrder.getUserID())) {
                 logger.info("Product with ID: " + item.getProductID() + " removed successfully after order from user cart with ID " + registeredOrder.getUserID());
-            }else {
+            } else {
                 logger.error("Product with ID: " + item.getProductID() + " could not be removed after order from user cart with ID " + registeredOrder.getUserID());
             }
         }
     }
 
-    public void getAllOrders(Context ctx){
-        if(ctx.sessionAttribute("userID")==null){
+    public void getAllOrders(Context ctx) {
+        if (ctx.sessionAttribute("userID") == null) {
             ctx.status(400);
             ctx.json("You must be logged to do this action");
             logger.warn("Attempt of show all orders without being logged");
             return;
         }
         User loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
-        if(loggedUser.getRole()!= Role.ADMIN){
+        if (loggedUser.getRole() != Role.ADMIN) {
             ctx.status(401);
             ctx.json(new ErrorMessage("You do not have permission to do that action"));
-            logger.warn("Attempt of show all orders without permission by user with ID "+loggedUser.getUserID());
+            logger.warn("Attempt of show all orders without permission by user with ID " + loggedUser.getUserID());
             return;
         }
         List<Order> orders = orderService.getAllOrders();
 
         ctx.status(200);
         ctx.json(orders);
-        logger.info("All orders showed to user with ID: "+loggedUser.getUserID());
+        logger.info("All orders showed to user with ID: " + loggedUser.getUserID());
+    }
+
+    public void updateStatus(Context ctx) {
+        Order requestOrder = ctx.bodyAsClass(Order.class);
+        if (ctx.sessionAttribute("userID") == null) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("You must be logged to do that"));
+            logger.warn("Attempt of update order status without logging");
+            return;
+        }
+        User loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
+
+        if (loggedUser.getRole() != Role.ADMIN) {
+            ctx.status(401);
+            ctx.json(new ErrorMessage("You do not have permission to do that"));
+            logger.warn("Attempt of update order status without permission by user it ID: " + loggedUser.getUserID());
+            return;
+        }
+
+        if (!orderService.validateStatus(ctx.pathParam("status"))) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("Status invalid"));
+            logger.warn("Attempt of update order status with invalid status by user with ID: " + ctx.sessionAttribute("userID"));
+            return;
+        } else {
+            requestOrder.setStatus(OrderStatus.valueOf(ctx.pathParam("status")));
+        }
+
+        Order updatedOrder = orderService.updateStatus(requestOrder);
+        if (updatedOrder == null) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("Something went wrong updating the status"));
+            logger.error("Something went wrong updating the status for order ID: " + requestOrder.getOrderID());
+            return;
+        }
+
+        ctx.status(200);
+        ctx.json(updatedOrder);
+        logger.info("Status of order with ID " + updatedOrder.getOrderID() + " was changed from " + requestOrder.getStatus().name() + " to " + updatedOrder.getStatus().name());
     }
 }

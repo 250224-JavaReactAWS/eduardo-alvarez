@@ -1,9 +1,6 @@
 package com.revature.repos;
 
-import com.revature.models.CartItem;
-import com.revature.models.Order;
-import com.revature.models.OrderItem;
-import com.revature.models.Product;
+import com.revature.models.*;
 import com.revature.util.ConnectionUtil;
 
 import java.sql.Connection;
@@ -78,5 +75,29 @@ public class OrderPostgres implements OrderDAO {
     @Override
     public boolean deleteById(int id) {
         return false;
+    }
+
+    @Override
+    public Order updateOrderStatus(Order order) {
+        if(order==null){
+            return null;
+        }
+        String query = "UPDATE orders SET status=? where order_id=? RETURNING *";
+        Order updatedOrder = null;
+        try(Connection conn = ConnectionUtil.getConnection()){
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1,order.getStatus().name());
+            preparedStatement.setInt(2,order.getOrderID());
+
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if(resultSet.next()){
+                updatedOrder = new Order(resultSet);
+            }
+        }catch (SQLException e){
+            e.printStackTrace();
+        }
+
+        return updatedOrder;
     }
 }
