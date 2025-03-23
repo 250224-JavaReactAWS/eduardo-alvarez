@@ -1,6 +1,7 @@
 package com.revature.services;
 
 import com.revature.models.CartItem;
+import com.revature.models.Order;
 import com.revature.models.Product;
 import com.revature.models.User;
 import com.revature.repos.CartItemDAO;
@@ -17,6 +18,10 @@ public class CartItemService {
     public CartItem registerCartItem(int user_id, int product_id, int quantity) {
         CartItem newCartItem = new CartItem(user_id, product_id, quantity);
         return cartItemDAO.create(newCartItem);
+    }
+
+    public List<CartItem> getAllCartItems(int userID){
+        return cartItemDAO.getAllCartItems(userID);
     }
 
     public boolean validateItem(int productID, int userID) {

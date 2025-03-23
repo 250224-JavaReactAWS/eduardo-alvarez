@@ -13,7 +13,6 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class CartItemPostgres implements CartItemDAO {
-    int currentIDProduct;
 
     public CartItemPostgres() {
     }
@@ -134,9 +133,5 @@ public class CartItemPostgres implements CartItemDAO {
     @Override
     public boolean deleteById(int id) {
         return false;
-    }
-
-    public void setCurrentIDProduct(int currentIDProduct) {
-        this.currentIDProduct = currentIDProduct;
     }
 }

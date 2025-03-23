@@ -15,7 +15,7 @@ public class Main {
 
 //        Connection conn = ConnectionUtil.getConnection();
 
-        JavalinUtil.create(7070);
+       JavalinUtil.create(7070);
 
         /*UserDAO userDAO = new UserDAOPostgres();
         UserService userService = new UserService(userDAO);
