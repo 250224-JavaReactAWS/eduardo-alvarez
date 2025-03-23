@@ -1,14 +1,8 @@
 package com.revature.util;
 
-import com.revature.controllers.CartItemController;
-import com.revature.controllers.OrderController;
-import com.revature.controllers.ProductController;
-import com.revature.controllers.UserController;
+import com.revature.controllers.*;
 import com.revature.repos.*;
-import com.revature.services.CartItemService;
-import com.revature.services.OrderService;
-import com.revature.services.ProductService;
-import com.revature.services.UserService;
+import com.revature.services.*;
 import io.javalin.Javalin;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -28,9 +22,13 @@ public class JavalinUtil {
         CartItemService cartItemService = new CartItemService(cartItemDAO);
         CartItemController cartItemController = new CartItemController(userService, productService, cartItemService);
 
+        OrderItemDAO orderItemDAO = new OrderItemPostgress();
+        OrderItemService orderItemService = new OrderItemService(orderItemDAO, userService);
+        OrderItemController orderItemController = new OrderItemController(orderItemService);
+
         OrderDAO orderPostgres = new OrderPostgres();
         OrderService orderService = new OrderService(orderPostgres);
-        OrderController orderController = new OrderController(orderService, productService, cartItemService, userService);
+        OrderController orderController = new OrderController(orderService, productService, cartItemService, orderItemService, userService);
 
         return Javalin.create(config -> {
                     config.router.apiBuilder(() -> {
@@ -54,6 +52,7 @@ public class JavalinUtil {
                         path("/order", () -> {
                             get("/showAll", orderController::getAllOrders);
                             get("/showAll/{status}", orderController::getOrdersByStatus);
+                            get("/pastOrders", orderItemController::getPastOrders);
                             post("/", orderController::registerOrder);
                             put("/update/{status}", orderController::updateStatus);
                         });

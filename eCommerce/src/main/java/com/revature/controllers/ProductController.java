@@ -1,6 +1,7 @@
 package com.revature.controllers;
 
 import com.revature.dtos.response.ErrorMessage;
+import com.revature.models.PastOrder;
 import com.revature.models.Product;
 import com.revature.models.Role;
 import com.revature.models.User;
@@ -9,6 +10,8 @@ import com.revature.services.UserService;
 import io.javalin.http.Context;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
+
+import java.util.List;
 
 public class ProductController {
     private final ProductService productService;
@@ -127,7 +130,7 @@ public class ProductController {
         if (foundProduct == null) {
             ctx.status(404);
             ctx.json(new ErrorMessage("Product not founded"));
-            logger.warn("Product with ID " + ctx.pathParam("ID") + " not founded");
+            logger.warn("Product with ID " + ctx.pathParam("ID") + " not found");
             return;
         }
 
