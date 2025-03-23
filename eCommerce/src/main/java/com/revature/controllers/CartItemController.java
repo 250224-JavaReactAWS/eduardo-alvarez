@@ -4,9 +4,8 @@ import com.revature.dtos.response.ErrorMessage;
 import com.revature.models.CartItem;
 import com.revature.models.Product;
 import com.revature.models.User;
-import com.revature.services.CartItemService;
-import com.revature.services.ProductService;
-import com.revature.services.UserService;
+import com.revature.repos.OrderItemDAO;
+import com.revature.services.*;
 import io.javalin.http.Context;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
@@ -18,10 +17,10 @@ public class CartItemController {
     private final CartItemService cartItemService;
     private final Logger logger = LoggerFactory.getLogger(CartItem.class);
 
-    public CartItemController(UserService userService, ProductService productService, CartItemService cartItemService) {
+    public CartItemController(UserService userService, ProductService productService,CartItemService cartItemService) {
         this.userService = userService;
-        this.cartItemService = cartItemService;
         this.productService = productService;
+        this.cartItemService = cartItemService;
     }
 
     public void registerCartItem(Context ctx) {

@@ -4,10 +4,7 @@ import com.fasterxml.jackson.databind.exc.InvalidFormatException;
 import com.revature.dtos.response.ErrorMessage;
 import com.revature.models.*;
 import com.revature.repos.OrderDAO;
-import com.revature.services.CartItemService;
-import com.revature.services.OrderService;
-import com.revature.services.ProductService;
-import com.revature.services.UserService;
+import com.revature.services.*;
 import io.javalin.http.Context;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -16,16 +13,18 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class OrderController {
+    private final UserService userService;
     private final OrderService orderService;
     private final ProductService productService;
     private final CartItemService cartItemService;
+    private final OrderItemService orderItemService;
     private final Logger logger = LoggerFactory.getLogger(CartItem.class);
-    private final UserService userService;
 
-    public OrderController(OrderService orderService, ProductService productService, CartItemService cartItemService, UserService userService) {
+    public OrderController(OrderService orderService, ProductService productService, CartItemService cartItemService, OrderItemService orderItemService, UserService userService) {
         this.orderService = orderService;
         this.productService = productService;
         this.cartItemService = cartItemService;
+        this.orderItemService = orderItemService;
         this.userService = userService;
     }
 
@@ -80,6 +79,16 @@ public class OrderController {
         ctx.status(200);
         ctx.json(registeredOrder);
         logger.info("Ordered registered with ID " + registeredOrder.getOrderID() + " for user with ID " + registeredOrder.getUserID());
+
+        for (int i = 0; i < productsInCart.size(); i++){
+            OrderItem newOrderItem = new OrderItem(registeredOrder.getOrderID(),itemsInCart.get(i).getProductID(),itemsInCart.get(i).getQuantity(),productsInCart.get(i).getPrice());
+            OrderItem registeredOrderItem = orderItemService.registerOrderItem(newOrderItem);
+            if(registeredOrderItem==null){
+                logger.error("Something went wrong trying to register order item for order: "+registeredOrder.getOrderID()+ " and the product: "+productsInCart.get(i).getProductID());
+            }else {
+                logger.info("Order item register for the order "+registeredOrderItem.getOrderID()+" and the product with ID: "+registeredOrderItem.getProductID());
+            }
+        }
 
         for (CartItem item : itemsInCart) {
             if (cartItemService.removeProduct(item.getProductID(), registeredOrder.getUserID())) {

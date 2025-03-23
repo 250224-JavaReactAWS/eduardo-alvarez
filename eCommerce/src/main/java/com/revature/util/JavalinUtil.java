@@ -5,10 +5,7 @@ import com.revature.controllers.OrderController;
 import com.revature.controllers.ProductController;
 import com.revature.controllers.UserController;
 import com.revature.repos.*;
-import com.revature.services.CartItemService;
-import com.revature.services.OrderService;
-import com.revature.services.ProductService;
-import com.revature.services.UserService;
+import com.revature.services.*;
 import io.javalin.Javalin;
 
 import static io.javalin.apibuilder.ApiBuilder.*;
@@ -28,9 +25,12 @@ public class JavalinUtil {
         CartItemService cartItemService = new CartItemService(cartItemDAO);
         CartItemController cartItemController = new CartItemController(userService, productService, cartItemService);
 
+        OrderItemDAO orderItemDAO = new OrderItemPostgress();
+        OrderItemService orderItemService = new OrderItemService(orderItemDAO, userService);
+
         OrderDAO orderPostgres = new OrderPostgres();
         OrderService orderService = new OrderService(orderPostgres);
-        OrderController orderController = new OrderController(orderService, productService, cartItemService, userService);
+        OrderController orderController = new OrderController(orderService, productService, cartItemService, orderItemService, userService);
 
         return Javalin.create(config -> {
                     config.router.apiBuilder(() -> {

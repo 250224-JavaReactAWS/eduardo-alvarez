@@ -1,5 +1,8 @@
 package com.revature.models;
 
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
 public class OrderItem {
     private int orderItemID;
     private int orderID;
@@ -12,6 +15,20 @@ public class OrderItem {
         this.productID = productID;
         this.quantity = quantity;
         this.price = price;
+    }
+
+    public OrderItem(){}
+
+    public OrderItem(ResultSet rs){
+        try {
+            orderItemID = rs.getInt("order_item_id");
+            orderID = rs.getInt("order_id");
+            productID = rs.getInt("product_id");
+            quantity = rs.getInt("quantity");
+            price = rs.getFloat("price");
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     public int getOrderItemID() {
