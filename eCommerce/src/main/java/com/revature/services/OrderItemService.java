@@ -1,7 +1,6 @@
 package com.revature.services;
 
 import com.revature.models.OrderItem;
-import com.revature.models.PastOrder;
 import com.revature.repos.OrderItemDAO;
 
 import java.util.List;

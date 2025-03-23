@@ -1,7 +1,6 @@
 package com.revature.controllers;
 
 import com.revature.dtos.response.ErrorMessage;
-import com.revature.models.PastOrder;
 import com.revature.models.Product;
 import com.revature.models.Role;
 import com.revature.models.User;
