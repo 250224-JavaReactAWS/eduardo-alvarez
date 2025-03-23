@@ -2,7 +2,6 @@ package com.revature.controllers;
 
 import com.revature.dtos.response.ErrorMessage;
 import com.revature.models.OrderItem;
-import com.revature.models.PastOrder;
 import com.revature.services.OrderItemService;
 import io.javalin.http.Context;
 import org.slf4j.Logger;
