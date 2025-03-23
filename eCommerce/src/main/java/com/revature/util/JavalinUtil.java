@@ -53,6 +53,7 @@ public class JavalinUtil {
                         });
                         path("/order", () -> {
                             get("/showAll", orderController::getAllOrders);
+                            get("/showAll/{status}", orderController::getOrdersByStatus);
                             post("/", orderController::registerOrder);
                             put("/update/{status}", orderController::updateStatus);
                         });

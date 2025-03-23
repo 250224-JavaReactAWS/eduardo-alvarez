@@ -149,4 +149,38 @@ public class OrderController {
         ctx.json(updatedOrder);
         logger.info("Status of order with ID " + updatedOrder.getOrderID() + " was changed from " + requestOrder.getStatus().name() + " to " + updatedOrder.getStatus().name());
     }
+
+    public void getOrdersByStatus(Context ctx){
+        if (ctx.sessionAttribute("userID") == null) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("You must be logged to do that"));
+            logger.warn("Attempt of show orders without logging");
+            return;
+        }
+        User loggedUser = userService.getUserByID(ctx.sessionAttribute("userID"));
+
+        if (loggedUser.getRole() != Role.ADMIN) {
+            ctx.status(401);
+            ctx.json(new ErrorMessage("You do not have permission to do that"));
+            logger.warn("Attempt of show order status without permission by user it ID: " + loggedUser.getUserID());
+            return;
+        }
+        if (!orderService.validateStatus(ctx.pathParam("status"))) {
+            ctx.status(404);
+            ctx.json(new ErrorMessage("Status invalid"));
+            logger.warn("Attempt of show order status with invalid status by user with ID: " + ctx.sessionAttribute("userID"));
+            return;
+        }
+
+        List<Order> orders = orderService.getOrderByStatus(ctx.pathParam("status"));
+        if (orders == null) {
+            ctx.status(400);
+            ctx.json(new ErrorMessage("Something went wrong updating the status"));
+            logger.error("Something went wrong showing the order status");
+            return;
+        }
+
+        ctx.status(200);
+        ctx.json(orders);
+    }
 }

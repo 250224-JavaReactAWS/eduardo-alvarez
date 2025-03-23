@@ -37,6 +37,10 @@ public class OrderService {
         return orderDAO.updateOrderStatus(order);
     }
 
+    public List<Order> getOrderByStatus(String s){
+       return orderDAO.filterOrdersByStatus(s);
+    }
+
     public boolean validateStatus(String s) {
         if (!OrderStatus.contains(s)) {
             System.out.println("Status no valido");

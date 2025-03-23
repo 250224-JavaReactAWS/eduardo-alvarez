@@ -100,4 +100,26 @@ public class OrderPostgres implements OrderDAO {
 
         return updatedOrder;
     }
+
+    @Override
+    public List<Order> filterOrdersByStatus(String status) {
+        List<Order> allOrders = new ArrayList<>();
+        Connection conn = ConnectionUtil.getConnection();
+
+        String query = "SELECT * FROM orders where status=?";
+
+        try {
+            PreparedStatement preparedStatement = conn.prepareStatement(query);
+            preparedStatement.setString(1,status);
+            ResultSet resultSet = preparedStatement.executeQuery();
+            while (resultSet.next()) {
+                Order retrievedOrder = new Order(resultSet);
+                allOrders.add(retrievedOrder);
+            }
+        } catch (SQLException e) {
+            System.out.println("Could not get all orders");
+            e.printStackTrace();
+        }
+        return allOrders;
+    }
 }
