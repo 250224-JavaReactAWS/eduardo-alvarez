@@ -1,7 +1,10 @@
 package com.revature.services;
 
 import com.revature.models.OrderItem;
+import com.revature.models.PastOrder;
 import com.revature.repos.OrderItemDAO;
+
+import java.util.List;
 
 public class OrderItemService {
     private final OrderItemDAO orderItemDAO;
@@ -14,5 +17,9 @@ public class OrderItemService {
 
     public OrderItem registerOrderItem(OrderItem orderItem){
         return orderItemDAO.create(orderItem);
+    }
+
+    public List<OrderItem> getPastOrders(int userID){
+        return orderItemDAO.getUserPastOrders(userID);
     }
 }
