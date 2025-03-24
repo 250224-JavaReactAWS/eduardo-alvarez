@@ -68,7 +68,7 @@ public class OrderController {
             return;
         }
         requestedOrder.setTotalPrice(totalPrice);
-        Order registeredOrder = orderService.registerOrder(requestedOrder.getUserID(), requestedOrder.getTotalPrice());
+        Order registeredOrder = orderService.registerOrder(requestedOrder);
         if (registeredOrder == null) {
             ctx.status(500);
             ctx.json(new ErrorMessage("Something went wrong registering an order for user with ID: " + requestedOrder.getUserID()));

@@ -1,7 +1,6 @@
 package com.revature.repos;
 
 import com.revature.models.OrderItem;
-import com.revature.models.PastOrder;
 import com.revature.services.OrderItemService;
 import com.revature.util.ConnectionUtil;
 

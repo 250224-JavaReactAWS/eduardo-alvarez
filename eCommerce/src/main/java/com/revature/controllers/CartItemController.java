@@ -101,6 +101,14 @@ public class CartItemController {
             requestCartItem.setUserID(ctx.sessionAttribute("userID"));
         }
 
+        Product requestProduct = productService.getProductByID(requestCartItem.getProductID());
+
+        if(requestProduct == null){
+            ctx.status(404);
+            ctx.json(new ErrorMessage("Product not found"));
+            logger.warn("Product not found to update quantity");
+        }
+
         if (requestCartItem.getQuantity() <= 0) {
             ctx.status(400);
             ctx.json(new ErrorMessage("Invalid quantity"));

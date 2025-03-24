@@ -19,6 +19,14 @@ public class OrderItem {
 
     public OrderItem(){}
 
+    public OrderItem(int orderItemID, int orderID, int productID, int quantity, float price) {
+        this.orderItemID = orderItemID;
+        this.orderID = orderID;
+        this.productID = productID;
+        this.quantity = quantity;
+        this.price = price;
+    }
+
     public OrderItem(ResultSet rs){
         try {
             orderItemID = rs.getInt("order_item_id");

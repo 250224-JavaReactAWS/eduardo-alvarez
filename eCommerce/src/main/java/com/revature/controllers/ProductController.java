@@ -1,7 +1,6 @@
 package com.revature.controllers;
 
 import com.revature.dtos.response.ErrorMessage;
-import com.revature.models.PastOrder;
 import com.revature.models.Product;
 import com.revature.models.Role;
 import com.revature.models.User;
@@ -10,8 +9,6 @@ import com.revature.services.UserService;
 import io.javalin.http.Context;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
-
-import java.util.List;
 
 public class ProductController {
     private final ProductService productService;
@@ -54,7 +51,7 @@ public class ProductController {
             return;
         }
 
-        Product registeredProduct = productService.registerNewUser(requestProduct.getName(), requestProduct.getDescription(), requestProduct.getPrice(), requestProduct.getStock());
+        Product registeredProduct = productService.registerNewProduct(requestProduct);
         if (registeredProduct == null) {
             ctx.status(500);
             ctx.json(new ErrorMessage("Something went wrong trying to register new product"));
@@ -151,7 +148,7 @@ public class ProductController {
 
         if (loggedUser.getRole() != Role.ADMIN) {
             ctx.status(401);
-            ctx.json("You do not have permission to do that");
+            ctx.json(new ErrorMessage("You do not have permission to do that"));
             logger.warn("Attempt of product deletion by user with ID: " + loggedUser.getUserID());
             return;
         }

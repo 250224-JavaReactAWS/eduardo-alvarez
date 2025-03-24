@@ -17,12 +17,11 @@ public class OrderService {
         this.orderDAO = orderDAO;
     }
 
-    public Order registerOrder(int userID, float totalPrice) {
-        if (totalPrice < 0) {
+    public Order registerOrder(Order requestOrder) {
+        if (requestOrder.getTotalPrice() < 0) {
             return null;
         }
-        Order newOrder = new Order(userID, totalPrice);
-        return orderDAO.create(newOrder);
+        return orderDAO.create(requestOrder);
     }
 
     public boolean validateStock(Product product, CartItem cartItem) {
