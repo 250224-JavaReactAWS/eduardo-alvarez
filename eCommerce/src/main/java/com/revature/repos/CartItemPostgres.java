@@ -97,16 +97,9 @@ public class CartItemPostgres implements CartItemDAO {
             preparedStatement.setInt(2, obj.getProductID());
             preparedStatement.setInt(3, obj.getQuantity());
 
-            System.out.println(obj.getUserID());
-            System.out.println(obj.getProductID());
-            System.out.println(obj.getQuantity());
-
             ResultSet resultSet = preparedStatement.executeQuery();
             if (resultSet.next()) {
                 newCartItem = new CartItem(resultSet);
-                System.out.println(newCartItem.getUserID());
-                System.out.println(newCartItem.getProductID());
-                System.out.println(newCartItem.getQuantity());
             }
         } catch (SQLException e) {
             System.out.println("No se pudo crear el cartItem");

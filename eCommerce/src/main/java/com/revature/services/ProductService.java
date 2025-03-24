@@ -12,7 +12,7 @@ public class ProductService {
         this.productDAO = productDAO;
     }
 
-    public Product registerNewUser(Product requestProduct) {
+    public Product registerNewProduct(Product requestProduct) {
         return productDAO.create(requestProduct);
     }
 

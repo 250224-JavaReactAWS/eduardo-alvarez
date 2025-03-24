@@ -10,8 +10,6 @@ import io.javalin.http.Context;
 import org.slf4j.LoggerFactory;
 import org.slf4j.Logger;
 
-import java.util.List;
-
 public class ProductController {
     private final ProductService productService;
     private final Logger logger = LoggerFactory.getLogger(ProductController.class);
@@ -53,7 +51,7 @@ public class ProductController {
             return;
         }
 
-        Product registeredProduct = productService.registerNewUser(requestProduct);
+        Product registeredProduct = productService.registerNewProduct(requestProduct);
         if (registeredProduct == null) {
             ctx.status(500);
             ctx.json(new ErrorMessage("Something went wrong trying to register new product"));
@@ -150,7 +148,7 @@ public class ProductController {
 
         if (loggedUser.getRole() != Role.ADMIN) {
             ctx.status(401);
-            ctx.json("You do not have permission to do that");
+            ctx.json(new ErrorMessage("You do not have permission to do that"));
             logger.warn("Attempt of product deletion by user with ID: " + loggedUser.getUserID());
             return;
         }

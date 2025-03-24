@@ -1,8 +1,6 @@
 import com.revature.models.Product;
 import com.revature.repos.ProductDAOPostgres;
-import com.revature.repos.UserDAOPostgres;
 import com.revature.services.ProductService;
-import com.revature.services.UserService;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -143,7 +141,7 @@ public class ProductServiceTest {
 
         when(mockDAO.create(requestProduct)).thenReturn(mockProduct);
 
-        Product registerProduct = productService.registerNewUser(requestProduct);
+        Product registerProduct = productService.registerNewProduct(requestProduct);
         Assert.assertNotNull(registerProduct);
     }
 }
