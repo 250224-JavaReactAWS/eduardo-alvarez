@@ -18,6 +18,13 @@ public class CartItem {
     public CartItem(){
     }
 
+    public CartItem(int cartItemID, int userID, int productID, int quantity) {
+        this.cartItemID = cartItemID;
+        this.userID = userID;
+        this.productID = productID;
+        this.quantity = quantity;
+    }
+
     public CartItem(ResultSet rs){
         try {
             userID=rs.getInt("user_id");
