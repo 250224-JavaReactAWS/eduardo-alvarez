@@ -1,5 +1,6 @@
 import com.revature.models.CartItem;
 import com.revature.models.Order;
+import com.revature.models.OrderStatus;
 import com.revature.models.Product;
 import com.revature.repos.OrderPostgres;
 import com.revature.services.OrderService;
@@ -75,5 +76,43 @@ public class OrderServiceTest {
         String s = "Not a real status";
         boolean result  = orderService.validateStatus(s);
         Assert.assertFalse(result);
+    }
+
+    @Test
+    public void registerOrderShouldReturnNotNull(){
+        int orderID=0;
+        int userID=1;
+        float totalPrice = 2f;
+        Order mockRegister = new Order(orderID,userID, totalPrice, OrderStatus.PENDING);
+        Order requestOrder = new Order(userID,totalPrice);
+        when(mockDAO.create(requestOrder)).thenReturn(mockRegister);
+
+        Order registerOrder = orderService.registerOrder(requestOrder);
+        Assert.assertNotNull(registerOrder);
+    }
+
+    @Test
+    public void registerOrderWithNegativePriceShouldReturnNull(){
+        int orderID=0;
+        int userID=1;
+        float totalPrice = -2f;
+        Order requestOrder = new Order(userID,totalPrice);
+        when(mockDAO.create(requestOrder)).thenReturn(null);
+
+        Order registerOrder = orderService.registerOrder(requestOrder);
+        Assert.assertNull(registerOrder);
+    }
+
+    @Test
+    public void updateOrderShouldReturnNotNull(){
+        int orderID=0;
+        int userID=1;
+        float totalPrice = 2f;
+        Order mockRegister = new Order(orderID,userID, totalPrice, OrderStatus.DELIVERED);
+        Order requestOrder = new Order(userID,totalPrice);
+        when(mockDAO.updateOrderStatus(requestOrder)).thenReturn(mockRegister);
+
+        Order registerOrder = orderService.updateStatus(requestOrder);
+        Assert.assertNotNull(registerOrder);
     }
 }

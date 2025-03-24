@@ -18,6 +18,13 @@ public class Order {
     public Order(){
     }
 
+    public Order(int orderID, int userID, float totalPrice, OrderStatus status) {
+        this.orderID = orderID;
+        this.userID = userID;
+        this.totalPrice = totalPrice;
+        this.status = status;
+    }
+
     public Order(ResultSet rs){
         try{
             orderID=rs.getInt("order_id");
