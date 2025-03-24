@@ -57,7 +57,6 @@ public class ProductService {
         else {
             updatedProduct.setStock(requestProduct.getStock());
         }
-
         updatedProduct = productDAO.update(updatedProduct);
         return updatedProduct;
     }
