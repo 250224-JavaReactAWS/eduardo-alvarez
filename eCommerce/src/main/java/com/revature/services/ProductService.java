@@ -12,10 +12,8 @@ public class ProductService {
         this.productDAO = productDAO;
     }
 
-    public Product registerNewUser(String name, String description, float price, int stock) {
-
-        Product newUser = new Product(name, description, price, stock);
-        return productDAO.create(newUser);
+    public Product registerNewUser(Product requestProduct) {
+        return productDAO.create(requestProduct);
     }
 
     public boolean validatePrice(float price) {

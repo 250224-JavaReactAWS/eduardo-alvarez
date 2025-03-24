@@ -130,4 +130,20 @@ public class ProductServiceTest {
         fakeRegisteredProduct.setProductID(1);
         when(mockDAO.create(fakeRegisteredProduct)).thenReturn(fakeRegisteredProduct);
     }
+
+    @Test
+    public void registerValidUserShouldReturnNotNull(){
+        int productID = 0;
+        String name = "MyProduct";
+        String description = "A product";
+        float price = 5f;
+        int stock = 140;
+        Product mockProduct = new Product(productID,name,description,price,stock);
+        Product requestProduct = new Product(name,description,price,stock);
+
+        when(mockDAO.create(requestProduct)).thenReturn(mockProduct);
+
+        Product registerProduct = productService.registerNewUser(requestProduct);
+        Assert.assertNotNull(registerProduct);
+    }
 }

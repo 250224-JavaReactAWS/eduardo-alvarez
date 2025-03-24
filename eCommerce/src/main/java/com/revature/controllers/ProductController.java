@@ -53,7 +53,7 @@ public class ProductController {
             return;
         }
 
-        Product registeredProduct = productService.registerNewUser(requestProduct.getName(), requestProduct.getDescription(), requestProduct.getPrice(), requestProduct.getStock());
+        Product registeredProduct = productService.registerNewUser(requestProduct);
         if (registeredProduct == null) {
             ctx.status(500);
             ctx.json(new ErrorMessage("Something went wrong trying to register new product"));
