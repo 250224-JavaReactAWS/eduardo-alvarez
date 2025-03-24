@@ -23,7 +23,7 @@ public class JavalinUtil {
         CartItemController cartItemController = new CartItemController(userService, productService, cartItemService);
 
         OrderItemDAO orderItemDAO = new OrderItemPostgress();
-        OrderItemService orderItemService = new OrderItemService(orderItemDAO, userService);
+        OrderItemService orderItemService = new OrderItemService(orderItemDAO);
         OrderItemController orderItemController = new OrderItemController(orderItemService);
 
         OrderDAO orderPostgres = new OrderPostgres();

@@ -7,11 +7,9 @@ import java.util.List;
 
 public class OrderItemService {
     private final OrderItemDAO orderItemDAO;
-    private final UserService userService;
 
-    public OrderItemService(OrderItemDAO orderItemDAO, UserService userService) {
+    public OrderItemService(OrderItemDAO orderItemDAO) {
         this.orderItemDAO = orderItemDAO;
-        this.userService = userService;
     }
 
     public OrderItem registerOrderItem(OrderItem orderItem){
